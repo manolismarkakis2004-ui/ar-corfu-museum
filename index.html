@@ -432,6 +432,11 @@
     device-orientation-permission-ui="enabled: false">
 
 
+
+    <a-assets>
+      <img id="dionisos" src="./dionisos.png" crossorigin="anonymous">
+    </a-assets>
+
     <a-camera
 
       position="0 0 0"
@@ -521,6 +526,37 @@
 
     </a-entity>
 
+    <!-- M3 — DIONYSOS PEDIMENT -->
+    <a-entity id="m3" mindar-image-target="targetIndex: 2">
+
+      <a-image
+        src="#dionisos"
+        width="1.45"
+        height="0.62"
+        position="0 0 0.10"
+        transparent="true"
+        material="shader: flat; opacity: .92">
+      </a-image>
+
+      <a-ring
+        radius-inner="0.34"
+        radius-outer="0.38"
+        color="#F7E7B6"
+        material="shader: flat; opacity: .95"
+        position="0 0 0.16"
+        animation="property: rotation; to: 0 0 360; loop: true; dur: 9000; easing: linear">
+      </a-ring>
+
+      <a-text
+        value="ΠΕΔΙΜΕΝΤΟ ΔΙΟΝΥΣΟΥ"
+        align="center"
+        color="#F7E7B6"
+        width="2.2"
+        position="0 0.48 0.16">
+      </a-text>
+
+    </a-entity>
+
   </a-scene>
 
 
@@ -541,6 +577,10 @@
 
     const m2 =
       document.getElementById("m2");
+
+
+    const m3 =
+      document.getElementById("m3");
 
 
     const status =
@@ -723,6 +763,8 @@
 
     const narrationM2 = "Μπροστά σου βρίσκεται ο Λέοντας του Μενεκράτη. Πρόκειται για ένα αρχαίο ταφικό μνημείο σε μορφή λιονταριού, που χρονολογείται στα τέλη του έβδομου αιώνα πριν από τον Χριστό. Παρατήρησε τη στάση του σώματος, τα χαρακτηριστικά του προσώπου και τη δύναμη που αποδίδεται στη μορφή του λιονταριού. Μόλις ολοκλήρωσες το δεύτερο βήμα. Τώρα συνέχισε την αναζήτησή σου για το τρίτο έκθεμα.";
 
+    const narrationM3 = "Μπροστά σου βρίσκεται το αέτωμα με τη σκηνή του Διονύσου. Παρατήρησε τις μορφές και τον τρόπο με τον οποίο οργανώνεται η σύνθεση μέσα στο αέτωμα. Το έργο μας βοηθά να κατανοήσουμε τον τρόπο με τον οποίο οι αρχαίοι καλλιτέχνες αφηγούνταν ιστορίες μέσα από τη γλυπτική. Μόλις ολοκλήρωσες το τρίτο βήμα. Τώρα συνέχισε την αναζήτησή σου για το τελευταίο έκθεμα.";
+
     /* legacy M1 narration kept below */
     const narration =
 
@@ -903,6 +945,54 @@
       }
     });
 
+
+
+    /* M3 — DIONYSOS FOUND */
+
+    m3.addEventListener("targetFound", () => {
+
+      if (!progress.m2) {
+        status.innerText = "🔒 Βρες πρώτα τον Λέοντα.";
+        help.innerText = "Η αποστολή προχωρά στον Λέοντα και μετά στο τρίτο έκθεμα.";
+        return;
+      }
+
+      status.innerText = "✓ M3 — Αέτωμα Διονύσου αναγνωρίστηκε";
+      currentNarration = narrationM3;
+      audioBtn.style.display = "block";
+
+      help.innerText = progress.m3
+        ? "✓ Τρίτο έκθεμα βρέθηκε — αναζήτησε το τελευταίο έκθεμα."
+        : "🎯 Εντόπισες το τρίτο έκθεμα!";
+
+      if (!progress.m3) {
+        progress.m3 = true;
+        localStorage.setItem("corfuQuest", JSON.stringify(progress));
+        updateQuest();
+
+        document.getElementById("foundIcon").innerText = "🍇";
+        document.getElementById("foundTitle").innerText = "ΤΡΙΤΟ ΕΚΘΕΜΑ ΒΡΕΘΗΚΕ!";
+        document.getElementById("foundText").innerHTML = "Ανακάλυψες το τρίτο στοιχείο της αποστολής.<br><br>Το αέτωμα του Διονύσου σε οδηγεί στο τελευταίο έκθεμα.";
+        document.getElementById("foundCoins").innerText = "+75 🪙";
+        foundMessage.classList.add("show");
+
+        setTimeout(() => foundMessage.classList.remove("show"), 4000);
+      }
+    });
+
+    m3.addEventListener("targetLost", () => {
+      status.innerText = "Αναζήτηση marker…";
+      audioBtn.style.display = "none";
+      speechSynthesis.cancel();
+
+      if (progress.m3) {
+        help.innerText = "✓ Τρίτο έκθεμα βρέθηκε — αναζήτησε το τελευταίο έκθεμα.";
+      } else if (progress.m2) {
+        help.innerText = "🔎 Αναζήτησε το αέτωμα του Διονύσου.";
+      } else {
+        help.innerText = "Συνέχισε πρώτα με τα προηγούμενα εκθέματα.";
+      }
+    });
 
     /*
       ============================
