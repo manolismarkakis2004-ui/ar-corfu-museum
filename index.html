@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="el">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Ζωντανεύοντας την Αρχαία Κέρκυρα — M1</title>
+
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+  <style>
+    html, body { margin:0; width:100%; height:100%; overflow:hidden; font-family:Arial,sans-serif; }
+    #help {
+      position:fixed; z-index:10; left:50%; bottom:22px; transform:translateX(-50%);
+      width:min(88vw,520px); box-sizing:border-box; padding:14px 16px;
+      background:rgba(0,0,0,.72); color:#fff; border-radius:14px;
+      text-align:center; line-height:1.35; font-size:15px;
+    }
+    #status {
+      position:fixed; z-index:11; top:18px; left:50%; transform:translateX(-50%);
+      padding:8px 13px; border-radius:999px; background:rgba(0,0,0,.65);
+      color:#fff; font-size:13px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="status">Αναζήτηση marker…</div>
+  <div id="help">Στρέψε την κάμερα προς το marker της Γοργούς.</div>
+
+  <a-scene
+    mindar-image="imageTargetSrc: ./targets/corfu.mind; autoStart: true; uiScanning: yes; uiLoading: yes;"
+    color-space="sRGB"
+    renderer="colorManagement: true, physicallyCorrectLights"
+    vr-mode-ui="enabled: false"
+    device-orientation-permission-ui="enabled: false">
+
+    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+    <a-entity id="m1" mindar-image-target="targetIndex: 0">
+
+      <!-- Floating title -->
+      <a-text
+        value="ΓΟΡΓΩ"
+        align="center"
+        color="#F7E7B6"
+        width="2.6"
+        position="0 0.55 0.05"
+        rotation="0 0 0">
+      </a-text>
+
+      <!-- Decorative AR halo: intentionally an interpretation, not a reconstruction -->
+      <a-ring
+        radius-inner="0.34"
+        radius-outer="0.38"
+        color="#F7E7B6"
+        material="shader: flat; opacity: .9"
+        position="0 0 0.04"
+        animation="property: rotation; to: 0 0 360; loop: true; dur: 9000; easing: linear">
+      </a-ring>
+
+      <!-- Main explanatory panel -->
+      <a-plane
+        width="1.85"
+        height="0.78"
+        color="#111111"
+        material="shader: flat; opacity: .88"
+        position="0 -0.72 0.03">
+      </a-plane>
+
+      <a-text
+        value="Αέτωμα του ναού της Άρτεμης\n6ος αι. π.Χ.\nΚεντρική μορφή: η Γοργώ"
+        align="center"
+        color="#FFFFFF"
+        width="2.0"
+        wrap-count="30"
+        position="0 -0.72 0.06">
+      </a-text>
+
+      <!-- Small prompt -->
+      <a-text
+        value="Παρατήρησε τις μορφές και εξερεύνησε την ιστορία."
+        align="center"
+        color="#F7E7B6"
+        width="1.75"
+        wrap-count="38"
+        position="0 -1.18 0.04">
+      </a-text>
+
+    </a-entity>
+  </a-scene>
+
+  <script src="./ar.js"></script>
+</body>
+</html>
