@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
   <title>Ζωντανεύοντας την Αρχαία Κέρκυρα — M1</title>
 
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
@@ -46,16 +47,43 @@
       color: #fff;
       font-size: 13px;
     }
+
+    #audioBtn {
+      position: fixed;
+      z-index: 15;
+      left: 50%;
+      bottom: 105px;
+      transform: translateX(-50%);
+      padding: 13px 22px;
+      border: none;
+      border-radius: 30px;
+      background: rgba(20,20,20,.90);
+      color: #F7E7B6;
+      font-size: 15px;
+      font-weight: bold;
+      box-shadow: 0 4px 18px rgba(0,0,0,.35);
+      display: none;
+    }
+
+    #audioBtn:active {
+      transform: translateX(-50%) scale(.96);
+    }
   </style>
 </head>
 
 <body>
 
-  <div id="status">Αναζήτηση marker…</div>
+  <div id="status">
+    Αναζήτηση marker…
+  </div>
 
   <div id="help">
     Στρέψε την κάμερα προς το marker της Γοργούς.
   </div>
+
+  <button id="audioBtn">
+    🔊 Άκου την ιστορία
+  </button>
 
   <a-scene
     mindar-image="imageTargetSrc: ./targets/corfu.mind; autoStart: true; uiScanning: yes; uiLoading: yes;"
@@ -73,31 +101,32 @@
       id="m1"
       mindar-image-target="targetIndex: 0">
 
-     <!-- Πλήρες ψηφιακό επίπεδο του εκθέματος -->
-<a-image
-  src="./gorgonnnnn.png"
- width="1.05"
-height="0.65"
-  position="0 0 0.08"
-  material="shader: flat; transparent: true; opacity: 0.88"
-  animation__appear="
-    property: scale;
-    from: 0.94 0.94 0.94;
-    to: 1 1 1;
-    dur: 900;
-    easing: easeOutCubic;
-  "
-  animation__float="
-    property: position;
-    from: 0 0.00 0.08;
-    to: 0 0.035 0.08;
-    dir: alternate;
-    loop: true;
-    dur: 3000;
-    easing: easeInOutSine;
-  ">
-</a-image>
-      
+      <!-- Πλήρες ψηφιακό επίπεδο του εκθέματος -->
+      <a-image
+        src="./gorgonnnnn.png"
+        width="1.05"
+        height="0.65"
+        position="0 0 0.08"
+        material="shader: flat; transparent: true; opacity: 0.88"
+        animation__appear="
+          property: scale;
+          from: 0.94 0.94 0.94;
+          to: 1 1 1;
+          dur: 900;
+          easing: easeOutCubic;
+        "
+        animation__float="
+          property: position;
+          from: 0 0.00 0.08;
+          to: 0 0.035 0.08;
+          dir: alternate;
+          loop: true;
+          dur: 3000;
+          easing: easeInOutSine;
+        ">
+      </a-image>
+
+      <!-- Τίτλος -->
       <a-text
         value="ΓΟΡΓΩ"
         align="center"
@@ -107,15 +136,22 @@ height="0.65"
         rotation="0 0 0">
       </a-text>
 
+      <!-- Διακοσμητικός κύκλος -->
       <a-ring
         radius-inner="0.34"
         radius-outer="0.38"
         color="#F7E7B6"
         material="shader: flat; opacity: .9"
         position="0 0 0.04"
-        animation="property: rotation; to: 0 0 360; loop: true; dur: 9000; easing: linear">
+        animation="
+          property: rotation;
+          to: 0 0 360;
+          loop: true;
+          dur: 9000;
+          easing: linear">
       </a-ring>
 
+      <!-- Πλαίσιο πληροφοριών -->
       <a-plane
         width="1.85"
         height="0.78"
@@ -133,6 +169,7 @@ height="0.65"
         position="0 -0.72 0.06">
       </a-text>
 
+      <!-- Οδηγία -->
       <a-text
         value="Παρατήρησε τις μορφές και εξερεύνησε την ιστορία."
         align="center"
@@ -145,6 +182,50 @@ height="0.65"
     </a-entity>
 
   </a-scene>
+
+  <!-- Ηχητική αφήγηση -->
+  <script>
+
+    const audioBtn = document.getElementById("audioBtn");
+    const m1 = document.getElementById("m1");
+
+    const narration =
+      "Μπροστά σου βρίσκεται η Γοργώ, " +
+      "η κεντρική μορφή του αετώματος του ναού της Άρτεμης. " +
+      "Το αέτωμα χρονολογείται στον έκτο αιώνα πριν από τον Χριστό " +
+      "και αποτελεί ένα από τα σημαντικότερα αρχαία γλυπτά της Κέρκυρας. " +
+      "Παρατήρησε το πρόσωπο της Γοργούς, " +
+      "τη στάση του σώματος και τις μορφές που την πλαισιώνουν.";
+
+    m1.addEventListener("targetFound", () => {
+
+      audioBtn.style.display = "block";
+
+    });
+
+    m1.addEventListener("targetLost", () => {
+
+      audioBtn.style.display = "none";
+
+      speechSynthesis.cancel();
+
+    });
+
+    audioBtn.addEventListener("click", () => {
+
+      speechSynthesis.cancel();
+
+      const speech = new SpeechSynthesisUtterance(narration);
+
+      speech.lang = "el-GR";
+      speech.rate = 0.9;
+      speech.pitch = 1.0;
+
+      speechSynthesis.speak(speech);
+
+    });
+
+  </script>
 
   <script src="./ar.js"></script>
 
