@@ -238,13 +238,11 @@
 
     }
 
-    #foundMessage.show {
-
-      opacity: 1;
-
-      transform: translate(-50%, -50%) scale(1);
-
-    }
+ #foundMessage.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: auto;
+}
 
     #foundIcon {
 
@@ -533,7 +531,6 @@
 
   </div>
 
-  
 
   <button id="audioBtn">
 
@@ -575,6 +572,23 @@
 
     </div>
 
+<button id="nextBtn" style="
+  display:none;
+  margin:18px auto 0;
+  padding:12px 22px;
+  border:1px solid #F7E7B6;
+  border-radius:999px;
+  background:rgba(20,15,8,.9);
+  color:#F7E7B6;
+  font-family:Cinzel, Georgia, serif;
+  font-size:14px;
+  font-weight:600;
+  letter-spacing:1px;
+  cursor:pointer;
+">
+  → ΕΠΟΜΕΝΟ ΕΚΘΕΜΑ
+</button>
+    
   </div>
 
   
@@ -736,6 +750,8 @@
     const audioBtn =
       document.getElementById("audioBtn");
 
+
+    
     const m1 =
       document.getElementById("m1");
 
@@ -754,6 +770,14 @@
     const foundMessage =
       document.getElementById("foundMessage");
 
+const nextBtn =
+  document.getElementById("nextBtn");
+
+nextBtn.addEventListener("click", () => {
+  foundMessage.classList.remove("show");
+  nextBtn.style.display = "none";
+});
+    
     const questProgress =
       document.getElementById("questProgress");
 
@@ -969,23 +993,10 @@
           document.getElementById("foundCoins").innerText = "+25 🪙";
 
           foundMessage.classList.add("show");
+nextBtn.style.display = "block";
 
+          
 
-          setTimeout(
-
-            () => {
-
-              foundMessage.classList.remove(
-
-                "show"
-
-              );
-
-            },
-
-            4000
-
-          );
 
         }
 
@@ -1021,8 +1032,9 @@
         document.getElementById("foundText").innerHTML = "Μπράβο! Ανακάλυψες το δεύτερο έκθεμα της αποστολής.<br><br><strong>ΕΠΟΜΕΝΟ ΕΚΘΕΜΑ:</strong><br><span style=\"color:#F7E7B6;font-size:20px;font-weight:bold;\">ΑΕΤΩΜΑ ΤΟΥ ΔΙΟΝΥΣΟΥ</span>";
         document.getElementById("foundCoins").innerText = "+50 🪙";
         foundMessage.classList.add("show");
-
-        setTimeout(() => foundMessage.classList.remove("show"), 4000);
+nextBtn.style.display = "block";
+        
+    
       }
     });
 
@@ -1068,8 +1080,9 @@
         document.getElementById("foundText").innerHTML = "Ανακάλυψες το τρίτο στοιχείο της αποστολής.<br><br>Το Αέτωμα του Διονύσου βρέθηκε.<br><br><strong>ΕΠΟΜΕΝΟ ΕΚΘΕΜΑ:</strong><br><span style=\"color:#F7E7B6;font-size:20px;font-weight:bold;\">ΚΟΥΡΟΣ</span>";
         document.getElementById("foundCoins").innerText = "+75 🪙";
         foundMessage.classList.add("show");
-
-        setTimeout(() => foundMessage.classList.remove("show"), 4000);
+nextBtn.style.display = "block";
+        
+      
       }
     });
 
@@ -1113,8 +1126,9 @@
         document.getElementById("foundText").innerHTML = "Μπράβο! Βρήκες και τα τέσσερα εκθέματα της αποστολής.<br><br>Η διαδρομή σου στην αρχαία Κέρκυρα ολοκληρώθηκε.";
         document.getElementById("foundCoins").innerText = "+100 🪙";
         foundMessage.classList.add("show");
-
-        setTimeout(() => foundMessage.classList.remove("show"), 5000);
+nextBtn.style.display = "block";
+        
+     
       }
     });
 
