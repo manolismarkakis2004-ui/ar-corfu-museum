@@ -926,7 +926,7 @@
 
         if (progress.m1) {
 
-          help.innerText =
+          help.innerHTML =
 
             "✓ Γοργώ βρέθηκε — <strong>επόμενο έκθεμα: Λέων του Μενεκράτη.</strong>";
 
@@ -934,7 +934,7 @@
 
         else {
 
-          help.innerText =
+          help.innerHTML =
 
             "🎯 Εντόπισες τη Γοργώ! <strong>Επόμενο: Λέων του Μενεκράτη.</strong>";
 
@@ -999,7 +999,7 @@
 
       if (!progress.m1) {
         status.innerText = "🔒 Βρες πρώτα τη Γοργώ.";
-        help.innerText = "Η αποστολή ξεκινά από τη Γοργώ.";
+        help.innerHTML = "Η αποστολή ξεκινά από τη Γοργώ.";
         return;
       }
 
@@ -1032,11 +1032,11 @@
       speechSynthesis.cancel();
 
       if (progress.m2) {
-        help.innerText = "✓ Λέοντας βρέθηκε — <strong>επόμενο έκθεμα: Αέτωμα του Διονύσου.</strong>";
+        help.innerHTML = "✓ Λέοντας βρέθηκε — <strong>επόμενο έκθεμα: Αέτωμα του Διονύσου.</strong>";
       } else if (progress.m1) {
-        help.innerText = "🔎 Αναζήτησε το <strong>επόμενο έκθεμα: Λέοντα του Μενεκράτη.</strong>";
+        help.innerHTML = "🔎 Αναζήτησε το <strong>επόμενο έκθεμα: Λέοντα του Μενεκράτη.</strong>";
       } else {
-        help.innerText = "Στρέψε την κάμερα προς το marker της Γοργούς.";
+        help.innerHTML = "Στρέψε την κάμερα προς το marker της Γοργούς.";
       }
     });
 
@@ -1046,7 +1046,7 @@
 
       if (!progress.m2) {
         status.innerText = "🔒 Βρες πρώτα τον Λέοντα.";
-        help.innerText = "Η αποστολή προχωρά στον Λέοντα και μετά στο τρίτο έκθεμα.";
+        help.innerHTML = "Η αποστολή προχωρά στον Λέοντα και μετά στο τρίτο έκθεμα.";
         return;
       }
 
@@ -1079,11 +1079,11 @@
       speechSynthesis.cancel();
 
       if (progress.m3) {
-        help.innerText = "✓ Αέτωμα Διονύσου βρέθηκε — <strong>επόμενο έκθεμα: Κούρος.</strong>";
+        help.innerHTML = "✓ Αέτωμα Διονύσου βρέθηκε — <strong>επόμενο έκθεμα: Κούρος.</strong>";
       } else if (progress.m2) {
-        help.innerText = "🔎 Αναζήτησε το <strong>επόμενο έκθεμα: Αέτωμα του Διονύσου.</strong>";
+        help.innerHTML = "🔎 Αναζήτησε το <strong>επόμενο έκθεμα: Αέτωμα του Διονύσου.</strong>";
       } else {
-        help.innerText = "Συνέχισε πρώτα με τα προηγούμενα εκθέματα.";
+        help.innerHTML = "Συνέχισε πρώτα με τα προηγούμενα εκθέματα.";
       }
     });
 
@@ -1091,7 +1091,7 @@
 
       if (!progress.m3) {
         status.innerText = "🔒 Βρες πρώτα το τρίτο έκθεμα.";
-        help.innerText = "Η αποστολή προχωρά πρώτα στο αέτωμα του Διονύσου.";
+        help.innerHTML = "Η αποστολή προχωρά πρώτα στο αέτωμα του Διονύσου.";
         return;
       }
 
@@ -1124,11 +1124,11 @@
       speechSynthesis.cancel();
 
       if (progress.m4) {
-        help.innerText = "🏆 Η αποστολή ολοκληρώθηκε!";
+        help.innerHTML = "🏆 Η αποστολή ολοκληρώθηκε!";
       } else if (progress.m3) {
-        help.innerText = "🔎 Αναζήτησε το <strong>τελευταίο έκθεμα: Κούρος.</strong>";
+        help.innerHTML = "🔎 Αναζήτησε το <strong>τελευταίο έκθεμα: Κούρος.</strong>";
       } else {
-        help.innerText = "Συνέχισε πρώτα με τα προηγούμενα εκθέματα.";
+        help.innerHTML = "Συνέχισε πρώτα με τα προηγούμενα εκθέματα.";
       }
     });
 
@@ -1154,7 +1154,7 @@
 
         if (progress.m1) {
 
-          help.innerText =
+          help.innerHTML =
 
             "🔎 Αναζήτησε το <strong>επόμενο έκθεμα: Λέοντα του Μενεκράτη.</strong>";
 
@@ -1162,7 +1162,7 @@
 
         else {
 
-          help.innerText =
+          help.innerHTML =
 
             "Στρέψε την κάμερα προς το marker της Γοργούς.";
 
@@ -1236,7 +1236,7 @@
 
     updateQuest();
 
-    help.innerText = 'Στρέψε την κάμερα προς το marker της Γοργούς.';
+    help.innerHTML = 'Στρέψε την κάμερα προς το marker της Γοργούς.';
     status.innerText = 'Αναζήτηση marker…';
 
     const arSystem = document.querySelector('[mindar-image]').systems['mindar-image'];
