@@ -1,0 +1,1183 @@
+<!doctype html>
+<html lang="el">
+
+<head>
+
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  >
+
+  <title>Ζωντανεύοντας την Αρχαία Κέρκυρα</title>
+
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+
+  <style>
+
+    html, body {
+
+      margin: 0;
+      width: 100%;
+      height: 100%;
+
+      overflow: hidden;
+
+      font-family: Arial, sans-serif;
+
+    }
+
+
+    /* =========================
+       QUEST HUD
+       ========================= */
+
+    #quest {
+
+      position: fixed;
+
+      z-index: 20;
+
+      top: 60px;
+
+      left: 50%;
+
+      transform: translateX(-50%);
+
+      width: min(88vw, 360px);
+
+      padding: 11px 16px;
+
+      box-sizing: border-box;
+
+      background: rgba(15,15,15,.82);
+
+      color: white;
+
+      border-radius: 16px;
+
+      text-align: center;
+
+      box-shadow: 0 4px 18px rgba(0,0,0,.25);
+
+    }
+
+
+    #questTitle {
+
+      font-size: 12px;
+
+      letter-spacing: 1.5px;
+
+      color: #F7E7B6;
+
+      font-weight: bold;
+
+    }
+
+
+    #questProgress {
+
+      margin-top: 6px;
+
+      font-size: 17px;
+
+      font-weight: bold;
+
+    }
+
+
+    #questHint {
+
+      margin-top: 5px;
+
+      font-size: 12px;
+
+      opacity: .9;
+
+    }
+
+
+    /* =========================
+       STATUS
+       ========================= */
+
+    #status {
+
+      position: fixed;
+
+      z-index: 21;
+
+      top: 18px;
+
+      left: 50%;
+
+      transform: translateX(-50%);
+
+      padding: 8px 13px;
+
+      border-radius: 999px;
+
+      background: rgba(0,0,0,.65);
+
+      color: white;
+
+      font-size: 13px;
+
+      white-space: nowrap;
+
+    }
+
+
+    /* =========================
+       BOTTOM HELP
+       ========================= */
+
+    #help {
+
+      position: fixed;
+
+      z-index: 20;
+
+      left: 50%;
+
+      bottom: 22px;
+
+      transform: translateX(-50%);
+
+      width: min(88vw, 520px);
+
+      box-sizing: border-box;
+
+      padding: 14px 16px;
+
+      background: rgba(0,0,0,.72);
+
+      color: white;
+
+      border-radius: 14px;
+
+      text-align: center;
+
+      line-height: 1.35;
+
+      font-size: 15px;
+
+    }
+
+
+    /* =========================
+       AUDIO BUTTON
+       ========================= */
+
+    #audioBtn {
+
+      position: fixed;
+
+      z-index: 25;
+
+      left: 50%;
+
+      bottom: 105px;
+
+      transform: translateX(-50%);
+
+      padding: 13px 22px;
+
+      border: none;
+
+      border-radius: 30px;
+
+      background: rgba(20,20,20,.90);
+
+      color: #F7E7B6;
+
+      font-size: 15px;
+
+      font-weight: bold;
+
+      box-shadow: 0 4px 18px rgba(0,0,0,.35);
+
+      display: none;
+
+    }
+
+
+    #audioBtn:active {
+
+      transform: translateX(-50%) scale(.96);
+
+    }
+
+
+    /* =========================
+       FOUND MESSAGE
+       ========================= */
+
+    #foundMessage {
+
+      position: fixed;
+
+      z-index: 30;
+
+      left: 50%;
+
+      top: 50%;
+
+      transform: translate(-50%, -50%) scale(.8);
+
+      width: min(85vw, 380px);
+
+      padding: 25px 20px;
+
+      box-sizing: border-box;
+
+      background: rgba(15,15,15,.94);
+
+      color: white;
+
+      border-radius: 22px;
+
+      text-align: center;
+
+      box-shadow: 0 10px 40px rgba(0,0,0,.5);
+
+      opacity: 0;
+
+      pointer-events: none;
+
+      transition: all .45s ease;
+
+    }
+
+
+    #foundMessage.show {
+
+      opacity: 1;
+
+      transform: translate(-50%, -50%) scale(1);
+
+    }
+
+
+    #foundIcon {
+
+      font-size: 42px;
+
+      margin-bottom: 8px;
+
+    }
+
+
+    #foundTitle {
+
+      font-size: 22px;
+
+      font-weight: bold;
+
+      color: #F7E7B6;
+
+    }
+
+
+    #foundText {
+
+      margin-top: 10px;
+
+      font-size: 15px;
+
+      line-height: 1.45;
+
+    }
+
+
+    #foundCoins {
+
+      margin-top: 14px;
+
+      font-size: 21px;
+
+      font-weight: bold;
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+
+  <!-- STATUS -->
+
+  <div id="status">
+
+    Αναζήτηση marker…
+
+  </div>
+
+
+  <!-- QUEST -->
+
+  <div id="quest">
+
+    <div id="questTitle">
+
+      ΑΠΟΣΤΟΛΗ: ΑΡΧΑΙΑ ΚΕΡΚΥΡΑ
+
+    </div>
+
+
+    <div id="questProgress">
+
+      ○ ○ ○ ○ &nbsp; 0 / 4
+
+    </div>
+
+
+    <div id="questHint">
+
+      Βρες τη Γοργώ για να ξεκινήσεις.
+
+    </div>
+
+  </div>
+
+
+  <!-- HELP -->
+
+  <div id="help">
+
+    Στρέψε την κάμερα προς το marker της Γοργούς.
+
+  </div>
+
+
+  <!-- AUDIO -->
+
+  <button id="audioBtn">
+
+    🔊 Άκου την ιστορία
+
+  </button>
+
+
+  <!-- FOUND MESSAGE -->
+
+  <div id="foundMessage">
+
+    <div id="foundIcon">
+
+      🏺
+
+    </div>
+
+
+    <div id="foundTitle">
+
+      ΕΚΘΕΜΑ ΒΡΕΘΗΚΕ!
+
+    </div>
+
+
+    <div id="foundText">
+
+      Ανακάλυψες το πρώτο στοιχείο της αποστολής.
+
+      <br><br>
+
+      Η Γοργώ σου δείχνει τον δρόμο
+
+      για το επόμενο έκθεμα.
+
+    </div>
+
+
+    <div id="foundCoins">
+
+      +25 🪙
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       AR SCENE
+       ========================= -->
+
+  <a-scene
+
+    mindar-image="
+      imageTargetSrc: ./targets/corfu.mind;
+      autoStart: true;
+      uiScanning: yes;
+      uiLoading: yes;
+    "
+
+    color-space="sRGB"
+
+    renderer="
+      colorManagement: true,
+      physicallyCorrectLights
+    "
+
+    vr-mode-ui="enabled: false"
+
+    device-orientation-permission-ui="enabled: false">
+
+
+
+    <a-assets>
+      <img id="dionisos" src="./dionisos.png" crossorigin="anonymous">
+    </a-assets>
+
+    <a-camera
+
+      position="0 0 0"
+
+      look-controls="enabled: false">
+
+    </a-camera>
+
+
+    <!-- =========================
+         M1 — GORGON
+         ========================= -->
+
+    <a-entity
+
+      id="m1"
+
+      mindar-image-target="targetIndex: 1">
+
+
+      <!-- GOLDEN DISCOVERY RING -->
+
+      <a-ring
+
+        radius-inner="0.34"
+
+        radius-outer="0.38"
+
+        color="#F7E7B6"
+
+        material="
+          shader: flat;
+          opacity: .95
+        "
+
+        position="0 0 0.08"
+
+        animation="
+          property: rotation;
+          to: 0 0 360;
+          loop: true;
+          dur: 9000;
+          easing: linear
+        ">
+
+      </a-ring>
+
+
+      <!-- TITLE -->
+
+      <a-text
+
+        value="ΓΟΡΓΩ"
+
+        align="center"
+
+        color="#F7E7B6"
+
+        width="2.6"
+
+        position="0 0.55 0.08">
+
+      </a-text>
+
+    </a-entity>
+
+
+    <!-- M2 — LION OF MENEKRATES -->
+    <a-entity id="m2" mindar-image-target="targetIndex: 0">
+
+      <a-ring
+        radius-inner="0.34"
+        radius-outer="0.38"
+        color="#F7E7B6"
+        material="shader: flat; opacity: .95"
+        position="0 0 0.08"
+        animation="property: rotation; to: 0 0 360; loop: true; dur: 9000; easing: linear">
+      </a-ring>
+
+      <a-text
+        value="ΛΕΩΝ ΤΟΥ ΜΕΝΕΚΡΑΤΗ"
+        align="center"
+        color="#F7E7B6"
+        width="2.2"
+        position="0 0.55 0.08">
+      </a-text>
+
+    </a-entity>
+
+    <!-- M3 — DIONYSOS PEDIMENT -->
+    <a-entity id="m3" mindar-image-target="targetIndex: 2">
+
+      <a-image
+        src="#dionisos"
+        width="1.45"
+        height="0.62"
+        position="0 0 0.10"
+        transparent="true"
+        material="shader: flat; opacity: .92">
+      </a-image>
+
+      <a-ring
+        radius-inner="0.34"
+        radius-outer="0.38"
+        color="#F7E7B6"
+        material="shader: flat; opacity: .95"
+        position="0 0 0.16"
+        animation="property: rotation; to: 0 0 360; loop: true; dur: 9000; easing: linear">
+      </a-ring>
+
+      <a-text
+        value="ΠΕΔΙΜΕΝΤΟ ΔΙΟΝΥΣΟΥ"
+        align="center"
+        color="#F7E7B6"
+        width="2.2"
+        position="0 0.48 0.16">
+      </a-text>
+
+    </a-entity>
+
+    <!-- M4 — KOUROS -->
+    <a-entity id="m4" mindar-image-target="targetIndex: 3">
+
+      <a-ring
+        radius-inner="0.34"
+        radius-outer="0.38"
+        color="#F7E7B6"
+        material="shader: flat; opacity: .95"
+        position="0 0 0.08"
+        animation="property: rotation; to: 0 0 360; loop: true; dur: 9000; easing: linear">
+      </a-ring>
+
+      <a-text
+        value="ΚΟΥΡΟΣ"
+        align="center"
+        color="#F7E7B6"
+        width="2.6"
+        position="0 0.55 0.08">
+      </a-text>
+
+    </a-entity>
+
+  </a-scene>
+
+
+  <!-- =========================
+       GAME LOGIC
+       ========================= -->
+
+  <script>
+
+
+    const audioBtn =
+      document.getElementById("audioBtn");
+
+
+    const m1 =
+      document.getElementById("m1");
+
+
+    const m2 =
+      document.getElementById("m2");
+
+
+    const m3 =
+      document.getElementById("m3");
+
+
+    const m4 =
+      document.getElementById("m4");
+
+
+    const status =
+      document.getElementById("status");
+
+
+    const foundMessage =
+      document.getElementById("foundMessage");
+
+
+    const questProgress =
+      document.getElementById("questProgress");
+
+
+    const questHint =
+      document.getElementById("questHint");
+
+
+    const help =
+      document.getElementById("help");
+
+
+    /*
+      ============================
+      SAVE QUEST PROGRESS
+      ============================
+    */
+
+
+    let progress = JSON.parse(
+
+      localStorage.getItem("corfuQuest")
+
+    ) || {
+
+      m1: false,
+      m2: false,
+      m3: false,
+      m4: false
+
+    };
+
+
+    /*
+      ============================
+      UPDATE QUEST HUD
+      ============================
+    */
+
+
+    function updateQuest() {
+
+
+      let completed = 0;
+
+
+      if (progress.m1)
+        completed++;
+
+
+      if (progress.m2)
+        completed++;
+
+
+      if (progress.m3)
+        completed++;
+
+
+      if (progress.m4)
+        completed++;
+
+
+      let dots = "";
+
+
+      for (let i = 1; i <= 4; i++) {
+
+
+        if (i <= completed) {
+
+          dots += "● ";
+
+        }
+
+        else {
+
+          dots += "○ ";
+
+        }
+
+      }
+
+
+      questProgress.innerHTML =
+
+        dots +
+
+        "&nbsp; " +
+
+        completed +
+
+        " / 4";
+
+
+      /*
+        NEXT OBJECT
+      */
+
+
+      if (completed === 0) {
+
+
+        questHint.innerText =
+
+          "Βρες τη Γοργώ για να ξεκινήσεις.";
+
+
+      }
+
+
+      else if (completed === 1) {
+
+
+        questHint.innerText =
+
+          "Βρες το επόμενο έκθεμα: τον Λέοντα του Μενεκράτη.";
+
+
+      }
+
+
+      else if (completed === 2) {
+
+
+        questHint.innerText =
+
+          "Συνέχισε τη διαδρομή και βρες το τρίτο έκθεμα.";
+
+
+      }
+
+
+      else if (completed === 3) {
+
+
+        questHint.innerText =
+
+          "Βρες το τελευταίο έκθεμα για να ολοκληρώσεις την αποστολή.";
+
+
+      }
+
+
+      else {
+
+
+        questHint.innerText =
+
+          "Η αποστολή ολοκληρώθηκε!";
+
+
+      }
+
+    }
+
+
+    updateQuest();
+
+
+    /*
+      ============================
+      NARRATION
+      ============================
+    */
+
+
+    let currentNarration = "Μπροστά σου βρίσκεται η Γοργώ, η κεντρική μορφή του αετώματος του ναού της Άρτεμης. Το αέτωμα χρονολογείται στον έκτο αιώνα πριν από τον Χριστό. Παρατήρησε το πρόσωπο της Γοργούς, τη στάση του σώματος και τις μορφές που την πλαισιώνουν. Μόλις ολοκλήρωσες το πρώτο βήμα. Τώρα αναζήτησε τον Λέοντα του Μενεκράτη.";
+
+    const narrationM1 = currentNarration;
+
+    const narrationM2 = "Μπροστά σου βρίσκεται ο Λέοντας του Μενεκράτη. Πρόκειται για ένα αρχαίο ταφικό μνημείο σε μορφή λιονταριού, που χρονολογείται στα τέλη του έβδομου αιώνα πριν από τον Χριστό. Παρατήρησε τη στάση του σώματος, τα χαρακτηριστικά του προσώπου και τη δύναμη που αποδίδεται στη μορφή του λιονταριού. Μόλις ολοκλήρωσες το δεύτερο βήμα. Τώρα συνέχισε την αναζήτησή σου για το τρίτο έκθεμα.";
+
+    const narrationM3 = "Μπροστά σου βρίσκεται το αέτωμα με τη σκηνή του Διονύσου. Παρατήρησε τις μορφές και τον τρόπο με τον οποίο οργανώνεται η σύνθεση μέσα στο αέτωμα. Το έργο μας βοηθά να κατανοήσουμε τον τρόπο με τον οποίο οι αρχαίοι καλλιτέχνες αφηγούνταν ιστορίες μέσα από τη γλυπτική. Μόλις ολοκλήρωσες το τρίτο βήμα. Τώρα συνέχισε την αναζήτησή σου για το τελευταίο έκθεμα.";
+
+    const narrationM4 = "Μπροστά σου βρίσκεται ο Κούρος. Η μορφή αυτή μας μεταφέρει στην αρχαϊκή περίοδο και μας δείχνει τον τρόπο με τον οποίο αποδίδονταν οι νεανικές ανδρικές μορφές στην αρχαία ελληνική γλυπτική. Παρατήρησε τη στάση, τα χαρακτηριστικά του προσώπου και τον τρόπο με τον οποίο αποδίδεται το σώμα. Ολοκλήρωσες το τέταρτο και τελευταίο βήμα της αποστολής. Συγχαρητήρια!";
+
+    /* legacy M1 narration kept below */
+    const narration =
+
+      "Μπροστά σου βρίσκεται η Γοργώ, " +
+
+      "η κεντρική μορφή του αετώματος " +
+
+      "του ναού της Άρτεμης. " +
+
+      "Το αέτωμα χρονολογείται στον έκτο αιώνα " +
+
+      "πριν από τον Χριστό. " +
+
+      "Παρατήρησε το πρόσωπο της Γοργούς, " +
+
+      "τη στάση του σώματος " +
+
+      "και τις μορφές που την πλαισιώνουν. " +
+
+      "Μόλις ολοκλήρωσες το πρώτο βήμα. " +
+
+      "Τώρα αναζήτησε τον Λέοντα του Μενεκράτη.";
+
+
+    /*
+      ============================
+      MARKER FOUND
+      ============================
+    */
+
+
+    m1.addEventListener(
+
+      "targetFound",
+
+      () => {
+
+
+        status.innerText =
+
+          "✓ M1 — Γοργώ αναγνωρίστηκε";
+
+        currentNarration = narrationM1;
+
+
+        audioBtn.style.display =
+
+          "block";
+
+
+        /*
+          CHANGE BOTTOM INSTRUCTION
+        */
+
+
+        if (progress.m1) {
+
+
+          help.innerText =
+
+            "✓ Γοργώ βρέθηκε — αναζήτησε τον Λέοντα του Μενεκράτη.";
+
+        }
+
+
+        else {
+
+
+          help.innerText =
+
+            "🎯 Εντόπισες τη Γοργώ!";
+
+        }
+
+
+        /*
+          FIRST TIME ONLY
+        */
+
+
+        if (!progress.m1) {
+
+
+          progress.m1 = true;
+
+
+          localStorage.setItem(
+
+            "corfuQuest",
+
+            JSON.stringify(progress)
+
+          );
+
+
+          updateQuest();
+
+
+          /*
+            SHOW REWARD
+          */
+
+
+          foundMessage.classList.add(
+
+            "show"
+
+          );
+
+
+          setTimeout(
+
+            () => {
+
+              foundMessage.classList.remove(
+
+                "show"
+
+              );
+
+            },
+
+            4000
+
+          );
+
+        }
+
+      }
+
+    );
+
+
+    /* M2 — LION FOUND */
+
+    m2.addEventListener("targetFound", () => {
+
+      if (!progress.m1) {
+        status.innerText = "🔒 Βρες πρώτα τη Γοργώ.";
+        help.innerText = "Η αποστολή ξεκινά από τη Γοργώ.";
+        return;
+      }
+
+      status.innerText = "✓ M2 — Λέοντας του Μενεκράτη αναγνωρίστηκε";
+      currentNarration = narrationM2;
+      audioBtn.style.display = "block";
+
+      help.innerText = progress.m2
+        ? "✓ Λέοντας βρέθηκε — αναζήτησε το τρίτο έκθεμα."
+        : "🎯 Εντόπισες τον Λέοντα του Μενεκράτη!";
+
+      if (!progress.m2) {
+        progress.m2 = true;
+        localStorage.setItem("corfuQuest", JSON.stringify(progress));
+        updateQuest();
+
+        document.getElementById("foundIcon").innerText = "🦁";
+        document.getElementById("foundTitle").innerText = "ΛΕΟΝΤΑΣ ΒΡΕΘΗΚΕ!";
+        document.getElementById("foundText").innerHTML = "Ανακάλυψες το δεύτερο στοιχείο της αποστολής.<br><br>Ο Λέοντας του Μενεκράτη σε οδηγεί στο επόμενο έκθεμα.";
+        document.getElementById("foundCoins").innerText = "+50 🪙";
+        foundMessage.classList.add("show");
+
+        setTimeout(() => foundMessage.classList.remove("show"), 4000);
+      }
+    });
+
+    m2.addEventListener("targetLost", () => {
+      status.innerText = "Αναζήτηση marker…";
+      audioBtn.style.display = "none";
+      speechSynthesis.cancel();
+
+      if (progress.m2) {
+        help.innerText = "✓ Λέοντας βρέθηκε — αναζήτησε το τρίτο έκθεμα.";
+      } else if (progress.m1) {
+        help.innerText = "🔎 Αναζήτησε τον Λέοντα του Μενεκράτη.";
+      } else {
+        help.innerText = "Στρέψε την κάμερα προς το marker της Γοργούς.";
+      }
+    });
+
+
+
+    /* M3 — DIONYSOS FOUND */
+
+    m3.addEventListener("targetFound", () => {
+
+      if (!progress.m2) {
+        status.innerText = "🔒 Βρες πρώτα τον Λέοντα.";
+        help.innerText = "Η αποστολή προχωρά στον Λέοντα και μετά στο τρίτο έκθεμα.";
+        return;
+      }
+
+      status.innerText = "✓ M3 — Αέτωμα Διονύσου αναγνωρίστηκε";
+      currentNarration = narrationM3;
+      audioBtn.style.display = "block";
+
+      help.innerText = progress.m3
+        ? "✓ Τρίτο έκθεμα βρέθηκε — αναζήτησε το τελευταίο έκθεμα."
+        : "🎯 Εντόπισες το τρίτο έκθεμα!";
+
+      if (!progress.m3) {
+        progress.m3 = true;
+        localStorage.setItem("corfuQuest", JSON.stringify(progress));
+        updateQuest();
+
+        document.getElementById("foundIcon").innerText = "🍇";
+        document.getElementById("foundTitle").innerText = "ΤΡΙΤΟ ΕΚΘΕΜΑ ΒΡΕΘΗΚΕ!";
+        document.getElementById("foundText").innerHTML = "Ανακάλυψες το τρίτο στοιχείο της αποστολής.<br><br>Το αέτωμα του Διονύσου σε οδηγεί στο τελευταίο έκθεμα.";
+        document.getElementById("foundCoins").innerText = "+75 🪙";
+        foundMessage.classList.add("show");
+
+        setTimeout(() => foundMessage.classList.remove("show"), 4000);
+      }
+    });
+
+    m3.addEventListener("targetLost", () => {
+      status.innerText = "Αναζήτηση marker…";
+      audioBtn.style.display = "none";
+      speechSynthesis.cancel();
+
+      if (progress.m3) {
+        help.innerText = "✓ Τρίτο έκθεμα βρέθηκε — αναζήτησε το τελευταίο έκθεμα.";
+      } else if (progress.m2) {
+        help.innerText = "🔎 Αναζήτησε το αέτωμα του Διονύσου.";
+      } else {
+        help.innerText = "Συνέχισε πρώτα με τα προηγούμενα εκθέματα.";
+      }
+    });
+
+    /* M4 — KOUROS FOUND */
+
+    m4.addEventListener("targetFound", () => {
+
+      if (!progress.m3) {
+        status.innerText = "🔒 Βρες πρώτα το τρίτο έκθεμα.";
+        help.innerText = "Η αποστολή προχωρά πρώτα στο αέτωμα του Διονύσου.";
+        return;
+      }
+
+      status.innerText = "✓ M4 — Κούρος αναγνωρίστηκε";
+      currentNarration = narrationM4;
+      audioBtn.style.display = "block";
+
+      help.innerText = progress.m4
+        ? "🏆 Η αποστολή ολοκληρώθηκε!"
+        : "🎯 Εντόπισες το τελευταίο έκθεμα!";
+
+      if (!progress.m4) {
+        progress.m4 = true;
+        localStorage.setItem("corfuQuest", JSON.stringify(progress));
+        updateQuest();
+
+        document.getElementById("foundIcon").innerText = "🏆";
+        document.getElementById("foundTitle").innerText = "ΑΠΟΣΤΟΛΗ ΟΛΟΚΛΗΡΩΘΗΚΕ!";
+        document.getElementById("foundText").innerHTML = "Βρήκες και τα τέσσερα εκθέματα της αποστολής.<br><br>Η διαδρομή σου στην αρχαία Κέρκυρα ολοκληρώθηκε.";
+        document.getElementById("foundCoins").innerText = "+100 🪙";
+        foundMessage.classList.add("show");
+
+        setTimeout(() => foundMessage.classList.remove("show"), 5000);
+      }
+    });
+
+    m4.addEventListener("targetLost", () => {
+      status.innerText = "Αναζήτηση marker…";
+      audioBtn.style.display = "none";
+      speechSynthesis.cancel();
+
+      if (progress.m4) {
+        help.innerText = "🏆 Η αποστολή ολοκληρώθηκε!";
+      } else if (progress.m3) {
+        help.innerText = "🔎 Αναζήτησε τον Κούρο.";
+      } else {
+        help.innerText = "Συνέχισε πρώτα με τα προηγούμενα εκθέματα.";
+      }
+    });
+
+
+    /*
+      ============================
+      MARKER LOST
+      ============================
+    */
+
+
+    m1.addEventListener(
+
+      "targetLost",
+
+      () => {
+
+
+        status.innerText =
+
+          "Αναζήτηση marker…";
+
+
+        audioBtn.style.display =
+
+          "none";
+
+
+        speechSynthesis.cancel();
+
+
+        /*
+          KEEP NEXT QUEST INSTRUCTION
+        */
+
+
+        if (progress.m1) {
+
+
+          help.innerText =
+
+            "🔎 Αναζήτησε τον Λέοντα του Μενεκράτη.";
+
+        }
+
+
+        else {
+
+
+          help.innerText =
+
+            "Στρέψε την κάμερα προς το marker της Γοργούς.";
+
+        }
+
+      }
+
+    );
+
+
+    /*
+      ============================
+      AUDIO
+      ============================
+    */
+
+
+    audioBtn.addEventListener(
+
+      "click",
+
+      () => {
+
+
+        speechSynthesis.cancel();
+
+
+        const speech =
+
+          new SpeechSynthesisUtterance(
+
+            currentNarration
+
+          );
+
+
+        speech.lang = "el-GR";
+
+
+        speech.rate = 0.9;
+
+
+        speech.pitch = 1.0;
+
+
+        speechSynthesis.speak(
+
+          speech
+
+        );
+
+      }
+
+    );
+
+
+  </script>
+
+
+  <script src="./ar.js"></script>
+
+
+</body>
+
+</html>
